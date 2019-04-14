@@ -50,7 +50,14 @@ for (const filename of benchmarks) {
     }
   }
 }
-// queue.length = binary.length * runs * benchmarks.length
+
+// Shuffle the queue. This mitigates the possibility of artifacts resulting from
+// operating system throttling or caching.
+// Ref: https://github.com/nodejs/node/pull/27081#issuecomment-479981874
+for (let i = queue.length - 1; i > 0; i--) {
+  const j = Math.floor(Math.random() * (i + 1));
+  [queue[i], queue[j]] = [queue[j], queue[i]];
+}
 
 // Print csv header
 console.log('"binary", "filename", "configuration", "rate", "time"');

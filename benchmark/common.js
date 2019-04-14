@@ -103,6 +103,13 @@ Benchmark.prototype._queue = function(options) {
     queue.push({});
   }
 
+  // Shuffle the queue. This mitigates the possibility of artifacts resulting from
+  // operating system throttling or caching.
+  // Ref: https://github.com/nodejs/node/pull/27081#issuecomment-479981874
+  for (let i = queue.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [queue[i], queue[j]] = [queue[j], queue[i]];
+  }
   return queue;
 };
 
